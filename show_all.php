@@ -8,11 +8,16 @@ include_once 'db.php';
 
 function action()
 {
-	$data = array();
-	$data[] = array(
-            'id' => 123,
-            'name' => "Luigi's Pizza",
-        );
+	global $db;
+	$query = 'SELECT * FROM `v_store` ';
+    $mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
+    $result = $mysqli->query($query);
+    $data = array();
+    while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+        $data[] = $row;
+    }
+    $result->close();
+    $mysqli->close();
 	return json_encode($data);
 }
 
