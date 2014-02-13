@@ -1,7 +1,7 @@
 <?php
 /**
  * @file   geo_lookup.php
- * @brief  Retrieves a list a restaurants in the given location
+ * @brief  Retrieves a list of restaurants in the given location
  */
 
 include_once 'db.php';
