@@ -2,8 +2,11 @@ Set oFSO = CreateObject("Scripting.FileSystemObject")
 htmlPath = "C:\xampp\htdocs\api\doc\html"
 Call doReplace(htmlPath & "\geo__lookup_8php.html" , ".php File", " Method")
 Call doReplace(htmlPath & "\show__all_8php.html"   , ".php File", " Method")
+Call doReplace(htmlPath & "\kml__update_8php.html" , ".php File", " Method")
 Call doReplace(htmlPath & "\geo__lookup_8php.html" , ">File"    , ">Method")
 Call doReplace(htmlPath & "\show__all_8php.html"   , ">File"    , ">Method")
+Call doReplace(htmlPath & "\kml__update_8php.html" , ">File"    , ">Method")
+
 Call doReplace(htmlPath & "\globals_func.html"     , ">File"    , ">Method")
 Call doReplace(htmlPath & "\globals.html"          , ">File"    , ">Method")
 Call doReplace(htmlPath & "\index.html"            , ">File"    , ">Method")
@@ -11,7 +14,6 @@ Call doReplace(htmlPath & "\files.html"            , ">File"    , ">Method")
 Call doReplace(htmlPath & "\globals_func.html"     , ".php"     , "")
 Call doReplace(htmlPath & "\globals.html"          , ".php"     , "")
 Call doReplace(htmlPath & "\files.html"            , ".php"     , "")
-
 
 
 
