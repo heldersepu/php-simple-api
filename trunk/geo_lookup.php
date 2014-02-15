@@ -12,19 +12,23 @@ function action($address, $coord)
 {
 	global $db;
 	$data = array();
-	if (isset($coord)) {
-		$query = "SELECT  S.*, ASTEXT(`geom`) AS geom FROM `oc_store_geom` G" .
-				" JOIN v_store S ON G.store_id = S.store_id " .
-				" WHERE MBRCONTAINS( geom, GEOMFROMTEXT( 'Point(" . str_replace(",", " ", $coord) . ")' ) ) ";
-		$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
-		$result = $mysqli->query($query);
-		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$data[] = $row;
+	try {
+		if (isset($coord)) {
+			$query = "SELECT  S.*, ASTEXT(`geom`) AS geom FROM `oc_store_geom` G" .
+					" JOIN v_store S ON G.store_id = S.store_id " .
+					" WHERE MBRCONTAINS( geom, GEOMFROMTEXT( 'Point(" . str_replace(",", " ", $coord) . ")' ) ) ";
+			$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
+			$result = $mysqli->query($query);
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				$data[] = $row;
+			}
+			$result->close();
+			$mysqli->close();
+		} else {
+			$data['error'] = 'Missing coord parameter';
 		}
-		$result->close();
-		$mysqli->close();
-	} else {
-		$data['error'] = 'Missing coord parameter';
+	} catch (Exception $e) {
+		$data['error'] = $e->getMessage();
 	}
 	return json_encode($data);
 }
