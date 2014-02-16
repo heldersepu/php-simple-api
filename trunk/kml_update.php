@@ -24,7 +24,7 @@ function action($id, $kml)
 					foreach(explode("\n", $coord) as $element) {
 						$latlon = explode(",", $element);
 						if (count($latlon) > 1) {
-							$poly .=  trim($latlon[1]) . " " . trim($latlon[1]) . ",";
+							$poly .=  trim($latlon[0]) . " " . trim($latlon[1]) . ",";
 						}
 					}
 					$poly = substr($poly, 0, -1) . "),";
