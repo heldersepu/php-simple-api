@@ -50,10 +50,15 @@ function action($id, $kml)
 							"`description`='test' ".
 							"WHERE `store_id`=" . $id ;
 				}
-				$mysqli->query($query);
+				$result = $mysqli->query($query);
+				if ($result) {
+					$data['geom'] = $poly;
+					$data['success'] = 'data was updated';
+					$result->close();
+				} else {
+					$data['error'] = $mysqli->error;
+				}
 				$mysqli->close();
-				$data['geom'] = $poly;
-				$data['success'] = 'data was updated';
 			} else {
 				$data['error'] = $mysqli->error;
 			}
