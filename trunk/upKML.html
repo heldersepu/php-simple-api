@@ -1,0 +1,41 @@
+<html>
+<head>
+  <script>
+    window.onload = function() {
+		var fileInput = document.getElementById('fileInput');
+		var kml = document.getElementById('kml');
+
+		fileInput.addEventListener('change', function(e) {
+			var file = fileInput.files[0];
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				kml.innerHTML = reader.result;
+			}
+			reader.readAsText(file);
+			window.setTimeout(function() {callAPI(kml.innerHTML)},1000)
+		});
+	}
+	function callAPI(kmldata)
+	{
+		kmldata = kmldata.replace(/  /g, "")
+		//window.location.href = 'http://localhost/api/kml_update.php?id=25&kml=' + encodeURIComponent(kmldata)
+	}
+  </script>
+</head>
+<body>
+<form action="\api\kml_update.php" method="post">
+  <div >
+	<h1>Upload Kml</h1>
+	ID:<input type="text" id="id" name="id" value="25" maxlength="4" size="4"><br>
+	<div>
+		Select a file:
+		<input type="file" id="fileInput">
+	</div>
+	<textarea id="kml" name="kml" cols="100" rows="20" ></textarea>
+	<br/>
+  <input type="submit">
+  </div>
+</form>
+
+</body>
+</html>

@@ -15,7 +15,23 @@ function action($id, $kml)
 	try {
 		if (isset($id) and isset($kml)) {
 			$intValue = 0;
-			$poly = "POLYGON((-73.898597 40.655828,-73.898792 40.65652,-73.899041 40.657371999999995,-73.899967 40.657285,-73.900303 40.657263,-73.902311 40.655792,-73.898597 40.655828))";
+			$poly = "POLYGON(";
+			$kml = urldecode($kml);
+			$xml = simplexml_load_string($kml);
+			foreach( $xml->Document->Placemark as $Placemark ) {
+				foreach( $Placemark->Polygon->outerBoundaryIs->LinearRing->coordinates as $coord ) {
+					$poly .= "(";
+					foreach(explode("\n", $coord) as $element) {
+						$latlon = explode(",", $element);
+						if (count($latlon) > 1) {
+							$poly .=  trim($latlon[1]) . " " . trim($latlon[1]) . ",";
+						}
+					}
+					$poly = substr($poly, 0, -1) . "),";
+				}
+			}
+			$poly = substr($poly, 0, -1) . ")";
+
 			$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
 			$query = "SELECT COUNT(*) AS c FROM `oc_store_geom` WHERE `store_id`=" . $id;
 			$result = $mysqli->query($query);
@@ -27,13 +43,14 @@ function action($id, $kml)
 				$query = "INSERT INTO `oc_store_geom` (`store_id`, `geom`, `description`) " .
 						" VALUES (" . $id . ", GeomFromText('" . $poly . "'), 'test')";
 			} else {
-				$query = "UPDATE `oc_store_geom` SET " .						
+				$query = "UPDATE `oc_store_geom` SET " .
 						"`geom`=GeomFromText('" . $poly . "'), " .
 						"`description`='test' ".
 						"WHERE `store_id`=" . $id ;
 			}
 			$mysqli->query($query);
 			$mysqli->close();
+			$data['geom'] = $poly;
 			$data['success'] = 'data was updated';
 		} else {
 			$data['error'] = 'Missing id or kml parameter';
@@ -44,5 +61,9 @@ function action($id, $kml)
 	return json_encode($data);
 }
 
-echo action($_GET['id'], $_GET['kml']);
+if (isset($_GET['id'])) {
+	echo action($_GET['id'], $_GET['kml']);
+} else {
+	echo action($_POST['id'], $_POST['kml']);
+}
 ?>
