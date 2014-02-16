@@ -54,7 +54,6 @@ function action($id, $kml)
 				if ($result) {
 					$data['geom'] = $poly;
 					$data['success'] = 'data was updated';
-					$result->close();
 				} else {
 					$data['error'] = $mysqli->error;
 				}
