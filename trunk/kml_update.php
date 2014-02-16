@@ -61,7 +61,6 @@ function action($id, $kml)
 				} else {
 					$data['error'] = $mysqli->error;
 				}
-				$mysqli->close();
 			} else {
 				$data['error'] = $mysqli->error;
 			}
