@@ -16,10 +16,14 @@ function action()
 		$query = 'SELECT * FROM `v_store` ';
 		$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
 		$result = $mysqli->query($query);
-		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-			$data[] = $row;
+		if ($result) {
+			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+				$data[] = $row;
+			}
+			$result->close();
+		} else {
+			$data['error'] = $mysqli->error;
 		}
-		$result->close();
 		$mysqli->close();
 	} catch (Exception $e) {
 		$data['error'] = $e->getMessage();
