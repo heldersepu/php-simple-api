@@ -20,18 +20,20 @@ function action($id, $kml)
 			$xml = simplexml_load_string($kml);
 			foreach( $xml->Document->Placemark as $Placemark ) {
 				foreach( $Placemark->Polygon->outerBoundaryIs->LinearRing->coordinates as $coord ) {
-					$poly .= "(";
 					$arrCoord = explode("\n", $coord);
-					if (count($arrCoord) < 2) {
+					if (count($arrCoord) < 3) {
 						$arrCoord = explode(" ", $coord);
 					}
-					foreach($arrCoord as $element) {
-						$latlon = explode(",", $element);
-						if (count($latlon) > 1) {
-							$poly .=  trim($latlon[0]) . " " . trim($latlon[1]) . ",";
+					if (count($arrCoord) > 2) {
+						$poly .= "(";
+						foreach($arrCoord as $element) {
+							$latlon = explode(",", $element);
+							if (count($latlon) > 1) {
+								$poly .=  trim($latlon[0]) . " " . trim($latlon[1]) . ",";
+							}
 						}
+						$poly = substr($poly, 0, -1) . "),";
 					}
-					$poly = substr($poly, 0, -1) . "),";
 				}
 			}
 			$poly = substr($poly, 0, -1) . ")";
