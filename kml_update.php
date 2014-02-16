@@ -35,23 +35,29 @@ function action($id, $kml)
 			$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
 			$query = "SELECT COUNT(*) AS c FROM `oc_store_geom` WHERE `store_id`=" . $id;
 			$result = $mysqli->query($query);
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$intValue = $row['c'];
-			}
-			$result->close();
-			if ($intValue == 0) {
-				$query = "INSERT INTO `oc_store_geom` (`store_id`, `geom`, `description`) " .
-						" VALUES (" . $id . ", GeomFromText('" . $poly . "'), 'test')";
+			if ($result) {
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+					$intValue = $row['c'];
+				}
+				$result->close();
+
+				if ($intValue == 0) {
+					$query = "INSERT INTO `oc_store_geom` (`store_id`, `geom`, `description`) " .
+							" VALUES (" . $id . ", GeomFromText('" . $poly . "'), 'test')";
+				} else {
+					$query = "UPDATE `oc_store_geom` SET " .
+							"`geom`=GeomFromText('" . $poly . "'), " .
+							"`description`='test' ".
+							"WHERE `store_id`=" . $id ;
+				}
+				$mysqli->query($query);
+				$mysqli->close();
+				$data['geom'] = $poly;
+				$data['success'] = 'data was updated';
 			} else {
-				$query = "UPDATE `oc_store_geom` SET " .
-						"`geom`=GeomFromText('" . $poly . "'), " .
-						"`description`='test' ".
-						"WHERE `store_id`=" . $id ;
+				$data['error'] = $mysqli->error;
 			}
-			$mysqli->query($query);
 			$mysqli->close();
-			$data['geom'] = $poly;
-			$data['success'] = 'data was updated';
 		} else {
 			$data['error'] = 'Missing id or kml parameter';
 		}

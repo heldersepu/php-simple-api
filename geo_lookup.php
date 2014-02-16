@@ -19,10 +19,14 @@ function action($address, $coord)
 					" WHERE MBRCONTAINS( geom, GEOMFROMTEXT( 'Point(" . str_replace(",", " ", $coord) . ")' ) ) ";
 			$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
 			$result = $mysqli->query($query);
-			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$data[] = $row;
+			if ($result) {
+				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+					$data[] = $row;
+				}
+				$result->close();
+			} else {
+				$data['error'] = $mysqli->error;
 			}
-			$result->close();
 			$mysqli->close();
 		} else {
 			$data['error'] = 'Missing coord parameter';
