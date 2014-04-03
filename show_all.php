@@ -11,7 +11,7 @@ include_once 'db.php';
 function action()
 {
 	global $db;
-    $data = array();
+	$data = array();
 	try {
 		$query = 'SELECT * FROM `v_store` ';
 		$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
