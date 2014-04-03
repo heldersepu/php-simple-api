@@ -3,7 +3,7 @@
  * @file   show_all.php
  * @brief  Shows a list of all restaurants
  *
- * Sample call: <a href="/api/show_all.php">/api/geo_lookup.php</a>
+ * Sample call: <a href="/api/show_all.php">/api/show_all.php</a>
  */
 
 include_once 'db.php';
