@@ -13,6 +13,16 @@ function action($address, $coord)
 	global $db;
 	$data = array();
 	try {
+		if (isset($address)) {
+			$geourl = "http://maps.google.com/maps/api/geocode/json?address=";
+			$geourl .= str_replace(" ", "+", $address) . "&sensor=false";
+			$geocode = file_get_contents($geourl);
+			$output= json_decode($geocode);
+
+			$lat = $output->results[0]->geometry->location->lat;
+			$lng = $output->results[0]->geometry->location->lng;
+			$coord = $lng.",".$lat;
+		}
 		if (isset($coord)) {
 			$query = "SELECT  S.*, ASTEXT(`geom`) AS geom FROM `oc_store_geom` G" .
 					" JOIN v_store S ON G.store_id = S.store_id " .
@@ -28,6 +38,9 @@ function action($address, $coord)
 				$data['error'] = $mysqli->error;
 			}
 			$mysqli->close();
+			if (isset($address)) {
+				$data['coord'] = $coord;
+			}
 		} else {
 			$data['error'] = 'Missing coord parameter';
 		}
