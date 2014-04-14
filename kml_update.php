@@ -36,37 +36,42 @@ function action($id, $kml)
 					}
 				}
 			}
-			$poly = substr($poly, 0, -1) . ")";
+			if ($poly == "POLYGON(") {
+				$data['error'] = "No coordinates detected";
+				$data['info'] = "Check KML structure (Placemark - Polygon - outerBoundaryIs - LinearRing - coordinates)";
+			} else {
+				$poly = substr($poly, 0, -1) . ")";
 
-			$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
-			$query = "SELECT COUNT(*) AS c FROM `oc_store_geom` WHERE `store_id`=" . $id;
-			$result = $mysqli->query($query);
-			if ($result) {
-				while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-					$intValue = $row['c'];
-				}
-				$result->close();
-
-				if ($intValue == 0) {
-					$query = "INSERT INTO `oc_store_geom` (`store_id`, `geom`, `description`) " .
-							" VALUES (" . $id . ", GeomFromText('" . $poly . "'), 'test')";
-				} else {
-					$query = "UPDATE `oc_store_geom` SET " .
-							"`geom`=GeomFromText('" . $poly . "'), " .
-							"`description`='test' ".
-							"WHERE `store_id`=" . $id ;
-				}
+				$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
+				$query = "SELECT COUNT(*) AS c FROM `oc_store_geom` WHERE `store_id`=" . $id;
 				$result = $mysqli->query($query);
 				if ($result) {
-					$data['geom'] = $poly;
-					$data['success'] = 'data was updated';
+					while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+						$intValue = $row['c'];
+					}
+					$result->close();
+
+					if ($intValue == 0) {
+						$query = "INSERT INTO `oc_store_geom` (`store_id`, `geom`, `description`) " .
+								" VALUES (" . $id . ", GeomFromText('" . $poly . "'), 'test')";
+					} else {
+						$query = "UPDATE `oc_store_geom` SET " .
+								"`geom`=GeomFromText('" . $poly . "'), " .
+								"`description`='test' ".
+								"WHERE `store_id`=" . $id ;
+					}
+					$result = $mysqli->query($query);
+					if ($result) {
+						$data['geom'] = $poly;
+						$data['success'] = 'data was updated';
+					} else {
+						$data['error'] = $mysqli->error;
+					}
 				} else {
 					$data['error'] = $mysqli->error;
 				}
-			} else {
-				$data['error'] = $mysqli->error;
+				$mysqli->close();
 			}
-			$mysqli->close();
 		} else {
 			$data['error'] = 'Missing id or kml parameter';
 		}
