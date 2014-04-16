@@ -10,6 +10,7 @@
 function action()
 {
     $data = array();
+	$data["REMOTE_ADDR"] = $_SERVER['REMOTE_ADDR'];
 	$data["count"] = count($_POST);
 	foreach ($_POST as $k => $v) {
 		$data[$k] = $v;
