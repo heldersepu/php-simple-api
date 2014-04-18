@@ -8,6 +8,9 @@
 
 include_once 'db.php';
 
+/**
+ * @brief --
+ */
 function action($store_id)
 {
 	global $db;

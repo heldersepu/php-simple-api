@@ -8,6 +8,9 @@
 
 include_once 'db.php';
 
+/**
+ * @brief --
+ */
 function action($address, $coord)
 {
 	global $db;
