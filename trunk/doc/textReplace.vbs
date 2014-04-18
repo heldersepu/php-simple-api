@@ -1,26 +1,23 @@
 Set oFSO = CreateObject("Scripting.FileSystemObject")
 htmlPath = "C:\xampp\htdocs\api\doc\html"
-Call doReplace(htmlPath & "\geo__lookup_8php.html" , ".php File", " Method")
-Call doReplace(htmlPath & "\show__all_8php.html"   , ".php File", " Method")
-Call doReplace(htmlPath & "\kml__update_8php.html" , ".php File", " Method")
-Call doReplace(htmlPath & "\geo__lookup_8php.html" , ">File"    , ">Method")
-Call doReplace(htmlPath & "\show__all_8php.html"   , ">File"    , ">Method")
-Call doReplace(htmlPath & "\kml__update_8php.html" , ">File"    , ">Method")
+Set Fldr = oFSO.GetFolder(htmlPath)
+For Each File In Fldr.Files
+	If LCase(Right(File,5))= ".html"  Then
+		Call doReplace(File , ">File"    , ">Method")		
+		If LCase(Right(File,8))= "php.html"  Then
+			Call doReplace(File , ".php File", " Method")
+		End If
+		Call doReplace(File, ".php", "")
+		Call doReplace(File, "documented files", "methods")
+	End If
+Next
 
-Call doReplace(htmlPath & "\globals_func.html"     , ">File"    , ">Method")
-Call doReplace(htmlPath & "\globals.html"          , ">File"    , ">Method")
-Call doReplace(htmlPath & "\index.html"            , ">File"    , ">Method")
-Call doReplace(htmlPath & "\files.html"            , ">File"    , ">Method")
-Call doReplace(htmlPath & "\globals_func.html"     , ".php"     , "")
-Call doReplace(htmlPath & "\globals.html"          , ".php"     , "")
-Call doReplace(htmlPath & "\files.html"            , ".php"     , "")
-
-
+WScript.Echo "ALL DONE!"
 
 
 Sub doReplace(strFile, strSearch, strReplace)
     If Not oFSO.FileExists(strFile) Then
-        WScript.Echo "Specified file does not exist."
+        WScript.Echo "Specified file does not exist: " & strFile
     Else
         Set oFile = oFSO.OpenTextFile(strFile, 1)
         strText = oFile.ReadAll
