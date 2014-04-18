@@ -38,9 +38,6 @@ function action($address, $coord)
 				$data['error'] = $mysqli->error;
 			}
 			$mysqli->close();
-			if (isset($address)) {
-				$data['coord'] = $coord;
-			}
 		} else {
 			$data['error'] = 'Missing coord parameter';
 		}
