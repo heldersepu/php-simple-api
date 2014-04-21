@@ -49,4 +49,15 @@ JOIN  `v_store_address` v3
 	ON st.store_id = v3.store_id
 JOIN  `v_store_min_checkout` vmc
 	ON st.store_id = vmc.store_id
+	
+	
+--INSERT INTO `oc_setting` ( `store_id`, `group`, `key`, `value`, `serialized`) VALUES
+SELECT 0 AS `store_id`, 
+	'close_store' AS `group`,
+	CONCAT('close_store_description', CAST(store_id AS CHAR)) AS `key` , 
+	'&lt;div style=&quot;position: fixed;top: 10px;z-index: 999;background: white;&quot;&gt;\r\n&lt;h1 style=&quot;color: red;&quot;&gt;' + name + ' is closed&lt;/h1&gt;\r\n&lt;/div&gt;\r\n' AS `value`,
+	0 AS `serialized`
+FROM `oc_store`
+
+
 
