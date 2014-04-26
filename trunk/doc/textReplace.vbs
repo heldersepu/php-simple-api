@@ -6,8 +6,9 @@ For Each File In Fldr.Files
 		Call doReplace(File , ">File"    , ">Method")		
 		If LCase(Right(File,8))= "php.html"  Then
 			Call doReplace(File , ".php File", " Method")
+		Else
+			Call doReplace(File, ".php", "")
 		End If
-		Call doReplace(File, ".php", "")
 		Call doReplace(File, "documented files", "methods")
 	End If
 Next
