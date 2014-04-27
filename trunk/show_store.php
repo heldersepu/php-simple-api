@@ -41,6 +41,14 @@ function action($store_id)
 					}
 					$result->close();
 				}
+				$query = 'SELECT `key`, `value` FROM `v_close_store` WHERE store_id='. $store_id;
+				$result = $mysqli->query($query);
+				if ($result) {
+					while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+						$data[] = $row;
+					}
+					$result->close();
+				}				
 			}
 		} else {
 			$data['error'] = $mysqli->error;
