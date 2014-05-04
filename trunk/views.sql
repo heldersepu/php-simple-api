@@ -37,19 +37,19 @@ DROP VIEW v_store;
 CREATE VIEW v_store AS
 SELECT st.store_id, name, url, email, phone, fax, logo, address, min_checkout, mon, tue, wed, thu, fri, sat, sun
 FROM  `oc_store` st
-JOIN  `v_store_email` v1
+LEFT JOIN  `v_store_email` v1
 	ON st.store_id = v1.store_id
-JOIN  `v_store_logo` vl2
+LEFT JOIN  `v_store_logo` vl2
 	ON st.store_id = vl2.store_id
-JOIN  `v_store_fax` vf2
+LEFT JOIN  `v_store_fax` vf2
 	ON st.store_id = vf2.store_id
-JOIN  `v_store_phone` v2
+LEFT JOIN  `v_store_phone` v2
 	ON st.store_id = v2.store_id
-JOIN  `v_store_address` v3
+LEFT JOIN  `v_store_address` v3
 	ON st.store_id = v3.store_id
-JOIN  `v_store_min_checkout` vmc
+LEFT JOIN  `v_store_min_checkout` vmc
 	ON st.store_id = vmc.store_id
-JOIN  `v_store_simple_hours` vsh
+LEFT JOIN  `v_store_simple_hours` vsh
 	ON st.store_id = vsh.store_id
 
 
