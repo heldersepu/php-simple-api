@@ -3,7 +3,7 @@
  * @file   show_products.php
  * @brief  Shows all the info for a restaurant
  *
- * Sample call: <a href="/api/show_products.php?store_id=5">/api/show_products.php?store_id=5</a>
+ * Sample call: <a href="/api/show_products.php?store_id=5">/api/show_products.php?store_id=5&show_options=true</a>
  */
 
 include_once 'db.php';
@@ -11,7 +11,7 @@ include_once 'db.php';
 /**
  * @brief --
  */
-function action($store_id)
+function action($store_id, $show_options)
 {
 	global $db;
 	$data = array();
@@ -21,30 +21,33 @@ function action($store_id)
 		$result = $mysqli->query($query);
 		if ($result) {
 			while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-				$options = array();
-				$queryOpt = 'SELECT option_id, name FROM `v_store_product_option` ' .
-							'WHERE product_id='. $row['product_id'];
-				$resultOpt = $mysqli->query($queryOpt);
-				if ($resultOpt) {
-					while ($rowOpt = $resultOpt->fetch_array(MYSQLI_ASSOC)) {
-						$options[] = $rowOpt;
-						$values = array();
-						$queryVal = 'SELECT option_value_id, name, price, image ' . 
-									'FROM `v_store_product_option_value` ' .
-									'WHERE option_id='. $rowOpt['option_id'] . 
-									' AND store_id='. $store_id .
-									' AND product_id='. $row['product_id'] ;
-						$resultVal = $mysqli->query($queryVal);
-						if ($resultVal) {
-							while ($rowVal = $resultVal->fetch_array(MYSQLI_ASSOC)) {
-								$values[] = $rowVal;
+				if ($show_options == "false") {
+					$data[] = array("product" => $row);
+				} else {
+					$options = array();
+					$queryOpt = 'SELECT option_id, name FROM `v_store_product_option` ' .
+								'WHERE product_id='. $row['product_id'];
+					$resultOpt = $mysqli->query($queryOpt);
+					if ($resultOpt) {
+						while ($rowOpt = $resultOpt->fetch_array(MYSQLI_ASSOC)) {
+							$values = array();
+							$queryVal = 'SELECT option_value_id, name, price, image ' .
+										'FROM `v_store_product_option_value` ' .
+										'WHERE option_id='. $rowOpt['option_id'] .
+										' AND store_id='. $store_id .
+										' AND product_id='. $row['product_id'] ;
+							$resultVal = $mysqli->query($queryVal);
+							if ($resultVal) {
+								while ($rowVal = $resultVal->fetch_array(MYSQLI_ASSOC)) {
+									$values[] = $rowVal;
+								}
 							}
+							$options[] = array("option" => $rowOpt, "option_values" => $values);
 						}
-						$options[] = array("option_values" => $values);
+						$resultOpt->close();
 					}
-					$resultOpt->close();
+					$data[] = array("product" => $row, "options" => $options);
 				}
-				$data[] = array("product" => $row, "options" => $options);				
 			}
 			$result->close();
 		} else {
@@ -59,7 +62,7 @@ function action($store_id)
 
 if (isset($_GET['store_id'])) {
 	if (is_numeric($_GET['store_id'])) {
-		echo action($_GET['store_id']);
+		echo action($_GET['store_id'], $_GET['show_options']);
 	} else {
 		echo "Invalid store_id";
 	}
