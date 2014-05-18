@@ -31,7 +31,9 @@ function action($store_id)
 						$values = array();
 						$queryVal = 'SELECT option_value_id, name, price, image ' . 
 									'FROM `v_store_product_option_value` ' .
-									'WHERE option_id='. $rowOpt['option_id'] . ' AND store_id='. $store_id ;
+									'WHERE option_id='. $rowOpt['option_id'] . 
+									' AND store_id='. $store_id .
+									' AND product_id='. $row['product_id'] ;
 						$resultVal = $mysqli->query($queryVal);
 						if ($resultVal) {
 							while ($rowVal = $resultVal->fetch_array(MYSQLI_ASSOC)) {
