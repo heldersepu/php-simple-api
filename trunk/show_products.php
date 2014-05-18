@@ -16,7 +16,7 @@ function action($store_id, $show_options)
 	global $db;
 	$data = array();
 	try {
-		$query = 'SELECT * FROM `v_store_product` WHERE store_id='. $store_id;
+		$query = 'SELECT product_id, name, price, image FROM `v_store_product` WHERE store_id='. $store_id;
 		$mysqli = new mysqli($db->server, $db->user, $db->pasw, $db->defaultdb);
 		$result = $mysqli->query($query);
 		if ($result) {
