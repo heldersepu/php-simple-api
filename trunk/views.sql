@@ -132,11 +132,11 @@ FROM `v_store_hours`
 
 
 
---INSERT INTO `oc_setting` ( `store_id`, `group`, `key`, `value`, `serialized`) VALUES
+--INSERT INTO `oc_setting` ( `store_id`, `group`, `key`, `value`, `serialized`)
 SELECT 0 AS `store_id`,
 	'close_store' AS `group`,
 	CONCAT('close_store_description', CAST(store_id AS CHAR)) AS `key` ,
-	'&lt;div style=&quot;position: fixed;top: 10px;z-index: 999;background: white;&quot;&gt;\r\n&lt;h1 style=&quot;color: red;&quot;&gt;' + name + ' is closed&lt;/h1&gt;\r\n&lt;/div&gt;\r\n' AS `value`,
+	CONCAT('&lt;div style=&quot;position: fixed;top: 10px;z-index: 999;background: white;&quot;&gt;\r\n&lt;h1 style=&quot;color: red;&quot;&gt;', CAST(name AS CHAR), ' is closed&lt;/h1&gt;\r\n&lt;/div&gt;\r\n') AS `value`,
 	0 AS `serialized`
 FROM `oc_store`
 
